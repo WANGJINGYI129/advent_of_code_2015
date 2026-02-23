@@ -7,7 +7,7 @@ with open('day_06.txt', 'r') as file_object:
         if clean_line:
             instructions.append(clean_line)
 
-lit_lights = set()
+light_switch = [[False for _ in range(1000)] for _ in range(1000)]
 
 for char in instructions:
     words = char.split()
@@ -24,22 +24,20 @@ for char in instructions:
 
     for x in range(x1, x2 + 1):
         for y in range(y1, y2 + 1):
-            pos = (x, y)
             if action == 'on':
-                lit_lights.add(pos)
+                light_switch[x][y] = True
             elif action == 'off':
-                if pos in lit_lights:
-                    lit_lights.remove(pos)
+                light_switch[x][y] = False
             elif action == 'toggle':
-                if pos in lit_lights:
-                    lit_lights.remove(pos)
-                else:
-                    lit_lights.add(pos)
+                light_switch[x][y] = not light_switch[x][y]
 
-print(len(lit_lights))
+lit_count = 0
+for i in light_switch:
+    lit_count = lit_count + i.count(True)
+print(lit_count)
 
 #pt.2
-bright = {}
+light_bright = [[0 for _ in range(1000)] for _ in range(1000)]
 
 for char in instructions:
     words = char.split()
@@ -54,16 +52,18 @@ for char in instructions:
 
     for x in range(x1, x2 + 1):
         for y in range(y1, y2 + 1):
-            pos = (x, y)
-            curr = bright.get(pos, 0)
+            curr = light_bright[x][y]
             if act == 'on':
-                bright[pos] = curr + 1
+                light_bright[x][y] = curr + 1
             elif act == 'off':
                 if curr - 1 >= 0:
-                    bright[pos] = curr - 1
+                    light_bright[x][y] = curr - 1
                 else:
-                    bright[pos] = 0
+                    light_bright[x][y] = 0
             elif act == 'toggle':
-                bright[pos] = curr + 2
+                light_bright[x][y] = curr + 2
 
-print(sum(bright.values()))
+total_bright = 0
+for row in light_bright:
+    total_bright += sum(row)
+print(total_bright)
